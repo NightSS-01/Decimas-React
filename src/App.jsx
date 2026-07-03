@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Link, NavLink } from 'react-router-dom';
 import ListaNotas from "./pages/ListaNotas";
 import CrearNota from './pages/CrearNota';
+import EditarNota from './pages/EditarNota';
+
 function App() {
   return (
     <BrowserRouter>
@@ -26,8 +28,9 @@ function App() {
         </div>
       </nav>
       <Routes>
-        <Route path="/" element={<ListaNotas />} />
-        <Route path="/crear" element={<CrearNota />} />
+        <Route path="/" element={<ListaNotas/>} />
+        <Route path="/crear" element={<CrearNota/>} />
+        <Route path="/editar/:id" element= {<EditarNota/>}/>
       </Routes>
     </BrowserRouter>
   );

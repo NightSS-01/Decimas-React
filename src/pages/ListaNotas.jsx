@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
-import { data, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import notasApi from "../api/notasApi";
+import NotaCard from "../components/NotaCard";
 
 export default function ListaNotas() {
     const [notas, setNotas] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState('');
+    const eliminar = async (id) => {
+        if (!confirm(`¿Estás seguro que deseas eliminar la nota ${id} ?`)) return;
+        try {
+            await notasApi.delete(`notas/${id}/`);
+            setNotas((prev) => prev.filter((n) => n.id !== id));
+        }   catch (err) {
+            setError("Error al eliminar la nota");
+        }
+    };
 
     useEffect(() => {
         notasApi.get('notas/')
@@ -43,21 +53,12 @@ export default function ListaNotas() {
                             <th>Título</th>
                             <th>Descripción</th>
                             <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {notas.map(nota =>(
-                            <tr key={nota.id}>
-                                <td>{nota.id}</td>
-                                <td>{nota.title}</td>
-                                <td>{nota.description}</td>
-                                <td>
-                                    {nota.completed
-                                        ? <span className="badge bg-success">Completada</span>
-                                        : <span className="badge bg-warning text-dark">Pendiente</span>
-                                    }
-                                </td>
-                            </tr>
+                        {notas.map((nota) => (
+                            <NotaCard key={nota.id} nota={nota} onEliminar={eliminar} />
                         ))}
                     </tbody>
                 </table>
